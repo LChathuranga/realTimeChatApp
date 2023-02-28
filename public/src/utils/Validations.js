@@ -28,7 +28,19 @@ export const handleRegistrationFormValidation = ({ values }) => {
   return true;
 };
 
-export const handleRegistrationResponse = ({ data }) => {
+export const handleLoginFormValidation = ({ values }) => {
+  const { password, userName } = values;
+  if (password === "") {
+    toast.error("Email and password is required.", toastErrorOptions);
+    return false;
+  } else if (userName.length === "") {
+    toast.error("Email and password is required.", toastErrorOptions);
+    return false;
+  }
+  return true;
+};
+
+export const handleResponseData = ({ data }) => {
   if (data.status === false) {
     toast.error(data.msg, toastErrorOptions);
     return false;
@@ -37,3 +49,4 @@ export const handleRegistrationResponse = ({ data }) => {
     return true;
   }
 };
+

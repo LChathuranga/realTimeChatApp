@@ -2,14 +2,16 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo.svg";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { handleRegistrationFormValidation, handleRegistrationResponse } from "../../utils/Validations";
+import {
+  handleRegistrationFormValidation,
+  handleResponseData,
+} from "../../utils/Validations";
 import axios from "axios";
 import { registerRoute } from "../../utils/APIRoutes";
 
 function Register() {
-
   const navigate = useNavigate();
 
   const [values, setValues] = useState({
@@ -18,6 +20,13 @@ function Register() {
     password: "",
     conformPassword: "",
   });
+  
+  useState(() => {
+    if (localStorage.getItem("chat-app-user")) {
+      console.log('register');
+      navigate("/");
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,9 +37,9 @@ function Register() {
         email,
         password,
       });
-      if(handleRegistrationResponse({ data })){
+      if (handleResponseData({ data })) {
         localStorage.setItem("chat-app-user", JSON.stringify(data.user));
-       navigate('/');
+        navigate("/");
       }
     }
   };

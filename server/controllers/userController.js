@@ -1,6 +1,7 @@
 const { default: mongoose } = require("mongoose");
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
+const { use } = require("../routes/userRoutes");
 
 module.exports.register = async (req, res, next) => {
   try {
@@ -22,4 +23,16 @@ module.exports.register = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+
+module.exports.login = async (req, res, next) => {
+  const { userName, password } = req.body;
+  const user = await User.findOne({ userName });
+  if (!user)
+    return res.json({ msg: "Incorrect user name or password", status: false });
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+  if (!isPasswordValid)
+    return res.json({ msg: "Incorrect user name or password", status: false });
+  delete user.password;
+  return res.json({ status: true, user });
 };
